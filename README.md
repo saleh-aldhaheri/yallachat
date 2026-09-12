@@ -1,58 +1,172 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Yalla Chat
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A real-time chat application with **AI agents**, **scheduled messaging**, and **multi-channel notifications** (email & WhatsApp). Built with Laravel + Livewire, a terminal-inspired dark UI, and Reverb for real-time updates.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 💬 Chat
+- **Private 1:1 chats** — start a conversation with any user.
+- **Group chats** — create groups with multiple participants and a group avatar.
+- **Real-time messaging** — messages appear instantly via Reverb/Laravel Echo.
+- **Presence / online status** — see who's online (presence channel).
+- **Unread badges** — per-chat unread counters.
+- **Avatars** — profile and group avatars (Spatie Media Library).
+- **Remove chat** — leave/remove a conversation.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 🤖 AI Agents
+- Register multiple AI models (Big Pickle, DeepSeek V4 Flash, MiMo V2.5, Laguna S 2.1, Ling 3.0 Flash, North Mini Code, Nemotron 3 Ultra — free tier models via OpenCode).
+- Per-model config: API key, **persona**, **tone**, **multi-language**, **auto-language**.
+- One active model at a time (enabling one deactivates the others).
+- **Auto-reply** — the agent replies on your behalf to incoming messages, with Google Calendar context.
+- Connection check on registration.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 📅 Scheduled Messages
+- **Recurring** schedules (daily / weekly / monthly / yearly) or **specific dates**.
+- **Multi-language** delivery (up to 3 languages per message).
+- Target one or more chats.
+- Full lifecycle: activate/deactivate, view, delete.
+- **Broadcasts** — send now, pause/resume, and per-chat status tracking (`pending`, `sent`, `failed`, `overdue`, `paused`).
+- Automated via a console command + queued jobs.
 
-## Learning Laravel
+### 🔔 Notification Channels
+- **Email** — configure with address + one-time verification code.
+- **WhatsApp** — configure with phone number + one-time code (via WAHA HTTP integration).
+- Connect / reconnect / remove / toggle active per channel.
+- Rate-limited code sending, code expiry, and brute-force protection (Laravel `RateLimiter`).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### ⭐ Priority Chats & Urgent Notifications
+- Mark a private chat as **priority** (requires a connected notification channel).
+- When you're offline, the other user can send you an **urgent message** delivered through your configured channels (email / WhatsApp).
+- Rate-limited (3 per hour per sender) and processed through the queue.
+- Priorities are automatically cleared when a user's channels are removed/deactivated (model observer).
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🔌 Integrations
+- **Google Calendar** — OAuth, so the agent can reason about your schedule.
+- **WhatsApp** — WAHA (WhatsApp HTTP API) via a Saloon connector.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 🎨 UX
+- Terminal / CLI-inspired dark theme (GitHub-dark palette, JetBrains Mono).
+- Toast notifications (masmerise/livewire-toaster) for success/error feedback.
 
-## Agentic Development
+## Tech Stack
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- **Backend:** Laravel (PHP), Livewire v4
+- **Frontend:** Blade + Alpine.js + Tailwind CSS v4
+- **Real-time:** Reverb + Laravel Echo (WebSockets)
+- **Queue/Cache:** Redis + Laravel Horizon
+- **AI:** `laravel/ai` (OpenCode provider) with tool support
+- **Database:** MySQL
+- **Media:** Spatie Media Library
+- **HTTP clients:** Saloon (WhatsApp), Socialite (Google OAuth)
+- **Server:** Laravel Octane (FrankenPHP)
+
+## Requirements
+
+- PHP 8.3+ (with `phpredis` / Redis)
+- Composer
+- Node.js + npm
+- MySQL
+- Redis
+- A WAHA instance for WhatsApp (optional)
+- Google OAuth credentials for Calendar (optional)
+
+## Installation
 
 ```bash
-composer require laravel/boost --dev
+git clone <repo-url> yalla-chat
+cd yalla-chat
 
-php artisan boost:install
+composer run setup   # installs deps, copies .env, key:generate, migrate, build assets
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Or step by step:
 
-## Contributing
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+npm install
+npm run build
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Development
 
-## Code of Conduct
+```bash
+composer run dev   # runs: serve + queue + logs + vite (concurrently)
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Run with Octane (FrankenPHP)
 
-## Security Vulnerabilities
+```bash
+php artisan octane:start --server=frankenphp --workers=4
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+`OCTANE_SERVER` and `OCTANE_WORKERS` can also be set in `.env`.
+
+## Environment Variables
+
+| Variable | Description |
+|---|---|
+| `DB_*` | MySQL connection |
+| `QUEUE_CONNECTION` | `redis` |
+| `CACHE_STORE` | `redis` |
+| `REDIS_*` | Redis connection |
+| `MAIL_*` | SMTP (e.g. Mailtrap) |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GOOGLE_REDIRECT` | Google OAuth for Calendar |
+| `WAHA_API_KEY` / `WAHA_SESSION` | WhatsApp HTTP API credentials |
+| `VITE_REVERB_*` | Reverb WebSocket config (key/host/port/scheme) |
+
+> The AI provider key is set per-model at runtime (each `AiModel` stores its own API key).
+
+## Queues & Horizon
+
+Queue names in use:
+
+| Queue | Jobs |
+|---|---|
+| `default` | `EmailNotificationJob`, `WhatsappNotificationJob` |
+| `chat-agent` | `ChatAgentJob` |
+| `scheduled-messages` | `SendScheduledMessagesJob` |
+
+Run the worker:
+
+```bash
+php artisan horizon        # dashboard at /horizon
+# or
+php artisan queue:work
+```
+
+## Real-time (Reverb)
+
+Broadcast channels:
+
+- `online` — presence channel for online users.
+- `chat.{chatId}.{receiverId}` — private channel for new messages.
+- `scheduled_message.{senderId}` — private channel for broadcast status updates.
+
+```bash
+php artisan reverb:start
+```
+
+## Project Structure
+
+```
+app/
+├── Action/          # dedicated use-case actions (send message, send email/whatsapp, …)
+├── Ai/              # agents (ChatAgent, ScheduledMessageAgent) + tools (GoogleCalendarTool)
+├── Enums/           # domain enums (models, services, channels, statuses)
+├── Events/          # broadcast events (MessageSent, ScheduledMessageStatusChanged)
+├── Http/            # controllers (OAuth)
+├── Integration/     # WhatsApp (WAHA) Saloon integration
+├── Jobs/            # queued jobs (notifications, chat agent, scheduled messages)
+├── Livewire/        # full-stack components + pages
+├── Mail/            # mailables (verification code, email notification)
+├── Models/          # Eloquent models
+├── Observers/       # NotificationChannelObserver
+└── Services/        # domain services (channel config, notifications, …)
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proprietary / internal project.
