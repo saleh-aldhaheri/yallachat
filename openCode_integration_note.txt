@@ -1,0 +1,12 @@
+curl -X POST "https://opencode.ai/zen/v1/responses" \
+     -H "Authorization: Bearer sk-xi5PDxniMtoOvbWxm3d4mhROboP5WEay9na4DYjBrvuoWLWMqKCwbq48ChfT7B1q" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "model": "deepseek-v4-flash-free",
+       "messages": [
+         {
+           "role": "user",
+           "content": "Write a clean python sorting function."
+         }
+       ]
+     }'

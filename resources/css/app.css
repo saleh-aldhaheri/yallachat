@@ -1,0 +1,43 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../../vendor/masmerise/livewire-toaster/resources/views/*.blade.php';
+
+@theme {
+    --color-page: #0d1117;
+    --color-panel: #161b22;
+    --color-border: #30363d;
+    --color-ink: #c9d1d9;
+    --color-ink-muted: #8b949e;
+    --color-you: #58a6ff;
+    --color-them: #3fb950;
+    --color-warning: #facc15;
+    --color-partial: #fb923c;
+    --color-danger: #f85149;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+@utility no-scrollbar {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@utility btn-primary {
+    @apply  text-them font-mono cursor-pointer hover:-translate-y-1 transition-transform;
+}
+
+@keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+.animate-blink {
+    animation: blink 1s steps(1) infinite;
+}
+
+[x-cloak] {
+    display: none !important;
+}

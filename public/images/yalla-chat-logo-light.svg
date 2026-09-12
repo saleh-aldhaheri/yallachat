@@ -1,0 +1,20 @@
+<svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="760" height="200" rx="28" fill="#FFFFFF"/>
+
+  <path d="M 78 55 L 60 55 L 60 145 L 78 145"
+        fill="none" stroke="#1A1D21" stroke-width="12"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 122 55 L 140 55 L 140 145 L 122 145"
+        fill="none" stroke="#1A1D21" stroke-width="12"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 84 80 h 33 a 9 9 0 0 1 9 9 v 12 a 9 9 0 0 1 -9 9 h -22.5 l -10.5 12 l 1.5 -12 h -1.5 a 9 9 0 0 1 -9 -9 v -12 a 9 9 0 0 1 9 -9 z"
+        fill="#0E8A5F"/>
+  <circle cx="89" cy="95" r="3" fill="#FFFFFF"/>
+  <circle cx="100" cy="95" r="3" fill="#FFFFFF"/>
+  <circle cx="111" cy="95" r="3" fill="#FFFFFF"/>
+
+  <text x="210" y="132" font-family="ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace"
+        font-size="78" font-weight="700" letter-spacing="-1">
+    <tspan fill="#1A1D21">yalla</tspan><tspan fill="#0E8A5F">-</tspan><tspan fill="#1A1D21">chat</tspan>
+  </text>
+</svg>
