@@ -215,9 +215,49 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'auto',
+                'autoScalingStrategy' => 'time',
                 'maxProcesses' => 10,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
+                'memory' => 128,
+                'tries' => 1,
+                'timeout' => 60,
+            ],
+
+            'supervisor-ai-chat' => [
+                'connection' => 'redis',
+                'queue' => [
+                    'ai-agent-chat'
+                ],
+                'balance' => 'auto',
+                'processes' => 5,
+                'tries' => 3,
+                'timeout' => 60,
+            ],
+
+            'supervisor-ai-scheduled' => [
+                'connection' => 'redis',
+                'queue' => [
+                    'ai-scheduled-messages',
+                ],
+                'balance' => 'auto',
+                'processes' => 2,
+                'tries' => 3,
+                'timeout' => 60,
+            ],
+
+            'supervisor-priority-notifications' => [
+                'connection' => 'redis',
+                'queue' => [
+                    'priority-notifications',
+                ],
+                'balance' => 'auto',
+                'processes' => 2,
+                'tries' => 1,
+                'timeout' => 60,
             ],
         ],
 

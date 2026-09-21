@@ -5,8 +5,10 @@ namespace App\Livewire\Component;
 use App\Models\NotificationChannel;
 use App\Services\WhatsappChannelConfigurationService;
 use Illuminate\View\View;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Masmerise\Toaster\Toaster;
+use Propaganistas\LaravelPhone\Rules\Phone;
 
 class WhatsappChannelConfiguration extends Component
 {
@@ -14,6 +16,11 @@ class WhatsappChannelConfiguration extends Component
 
     public bool $showModal = false;
 
+    #[Validate([
+        'required',
+        new Phone(type: 'mobile'),
+        'regex:/^\+[1-9]\d{6,14}$/',
+    ])]
     public string $phoneNumber = '';
 
     public string $code = '';

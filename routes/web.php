@@ -6,9 +6,7 @@ use App\Livewire\Pages\Auth\Register;
 use App\Livewire\Pages\Main;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', Login::class)->middleware('guest');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');

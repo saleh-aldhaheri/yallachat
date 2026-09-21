@@ -100,7 +100,9 @@ class Profile extends Component
         $userChanged = false;
 
         if ($this->avatar) {
-            $user->addMedia($this->avatar)->toMediaCollection('avatar');
+            $user->addMedia($this->avatar)
+                ->sanitizingFileName(fn (string $fileName): string => preg_replace('/[^\pL\pN._-]+/u', '-', $fileName))
+                ->toMediaCollection('avatar');
             $userChanged = true;
         }
 

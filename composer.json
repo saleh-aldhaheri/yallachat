@@ -21,6 +21,7 @@
         "laravel/tinker": "^3.0",
         "livewire/livewire": "^4.3",
         "masmerise/livewire-toaster": "^2.10",
+        "propaganistas/laravel-phone": "^6.0",
         "saloonphp/laravel-plugin": "^5.0",
         "spatie/laravel-data": "^4.23",
         "spatie/laravel-medialibrary": "^11.23"

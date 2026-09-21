@@ -28,7 +28,7 @@ class Whatsapp extends Connector
 
     public function resolveBaseUrl(): string
     {
-        return 'http://localhost:3000/api/';
+        return config('services.waha.base_url');
     }
 
     public function sendText(string $session, string $chatId, string $text): mixed
