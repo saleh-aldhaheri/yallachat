@@ -1,0 +1,12 @@
+{
+    email {$CADDY_EMAIL}
+}
+
+{$CADDY_DOMAIN} {
+    encode zstd gzip
+    reverse_proxy app:8000
+}
+
+{$CADDY_REVERB_DOMAIN} {
+    reverse_proxy reverb:8080
+}

@@ -23,7 +23,7 @@ class SendText extends WhatsappRequest implements HasBody
 
     public function resolveEndpoint(): string
     {
-        return 'sendText';
+        return '/api/sendText';
     }
 
     protected function defaultBody(): array

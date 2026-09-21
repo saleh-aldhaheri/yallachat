@@ -165,6 +165,14 @@ class HandleScheduledMessage extends Component
             'selectedChats' => 'required|array|min:1',
         ]);
 
+        $aiModel = auth()->user()->aiModels()->useable()->first();
+
+        if(!$aiModel)
+        {
+            Toaster::error("No enabled and connected AI model was found. Please check your model configuration.");
+            return;
+        }
+
         if ($this->scheduledType === 'recurring') {
             $this->validate([
                 'startDate' => 'required|date|after_or_equal:today',

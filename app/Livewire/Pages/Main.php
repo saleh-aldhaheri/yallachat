@@ -11,7 +11,7 @@ class Main extends Component
 {
     public ?Chat $chat = null;
 
-    public $page = 'notification_channels';
+    public $page = 'chat';
 
     public array $connectedUsers = [];
 

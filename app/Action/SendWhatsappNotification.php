@@ -37,7 +37,7 @@ class SendWhatsappNotification
             throw new \Exception("phone number not found for {$receiver->name}");
         }
 
-        $phoneNumber = $phoneNumber.'@c.us';
+        $phoneNumber = ltrim($phoneNumber, "+").'@c.us';
 
         $whatsapp->sendText(config('services.waha.session'), $phoneNumber, $message);
     }

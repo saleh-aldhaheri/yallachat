@@ -85,7 +85,9 @@ class CreateGroup extends Component
             $chat->participants()->attach($this->users->pluck('id')->toArray());
 
             if ($this->groupAvatar) {
-                $chat->addMedia($this->groupAvatar)->toMediaCollection('group-avatar');
+                $chat->addMedia($this->groupAvatar)
+                    ->sanitizingFileName(fn (string $fileName): string => preg_replace('/[^\pL\pN._-]+/u', '-', $fileName))
+                    ->toMediaCollection('group-avatar');
             }
 
             Toaster::success("Group {$this->name} created successfully.");

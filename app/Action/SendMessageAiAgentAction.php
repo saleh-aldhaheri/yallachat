@@ -42,7 +42,11 @@ class SendMessageAiAgentAction
             Compose the auto-reply response according to your system instructions now.
             PROMPT;
 
-            $response = $agent->prompt($promptPayload, model: $ownerAiModel->name->value)->text;
+            try {
+              $response = $agent->prompt($promptPayload, model: $ownerAiModel->name->value)->text;
+            }catch (\Throwable){
+                $response =  "We’re currently unable to reach the user’s information. Please try again later, or use another method of communication to contact the user.";
+            }
 
         }
 

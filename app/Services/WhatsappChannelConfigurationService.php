@@ -36,7 +36,9 @@ class WhatsappChannelConfigurationService
 
                 $text = "YallaChat:\nHello {$user->name}, your confirmation code is {$code}.\nThis code will expire within {$hours} hour(s).";
 
-                $this->whatsapp->sendText(config('services.waha.session'), $phoneNumber.'@c.us', $text);
+                $formatedPhone = ltrim($phoneNumber, '+');
+
+                $this->whatsapp->sendText(config('services.waha.session'), $formatedPhone.'@c.us', $text);
 
                 return true;
             },
