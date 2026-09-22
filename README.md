@@ -1,4 +1,7 @@
-# Yalla Chat
+<h1>
+  <img src="public/images/yalla-chat-icon-dark.svg" alt="Yalla Chat logo" width="44" align="center" />
+  Yalla Chat
+</h1>
 
 A real-time chat application with **AI agents**, **scheduled messaging**, and **multi-channel notifications** (email & WhatsApp). Built with Laravel + Livewire, a terminal-inspired dark UI, and Reverb for real-time updates.
 
@@ -96,6 +99,10 @@ npm run build
 composer run dev   # runs: serve + queue + logs + vite (concurrently)
 ```
 
+### Run with Docker
+
+The `docker-compose.yml` targets production (pulls the Docker Hub image and serves behind Caddy). See [Deployment](#deployment).
+
 ### Run with Octane (FrankenPHP)
 
 ```bash
@@ -125,9 +132,10 @@ Queue names in use:
 
 | Queue | Jobs |
 |---|---|
-| `default` | `EmailNotificationJob`, `WhatsappNotificationJob` |
-| `chat-agent` | `ChatAgentJob` |
-| `scheduled-messages` | `SendScheduledMessagesJob` |
+| `default` | fallback / misc |
+| `ai-agent-chat` | `ChatAgentJob` |
+| `ai-scheduled-messages` | `SendScheduledMessagesJob` |
+| `priority-notifications` | `EmailNotificationJob`, `WhatsappNotificationJob` |
 
 Run the worker:
 
@@ -147,6 +155,31 @@ Broadcast channels:
 
 ```bash
 php artisan reverb:start
+```
+
+## Deployment
+
+The app ships as a single Docker image (`salehaldhaheri1010/yallachat`) running in multiple roles (app, reverb, horizon, scheduler, migrate) alongside MySQL, Redis, and Caddy for TLS + reverse proxy.
+
+### CI/CD
+
+`.github/workflows/production.yml` builds the image, pushes it to Docker Hub, then SSHes to the server and runs `docker compose pull && down && up -d`.
+
+### Server files
+
+The server only holds three files under `/var/www/yallachat`:
+
+- `docker-compose.yml` — pulls the Docker Hub image
+- `Caddyfile` — TLS + reverse proxy
+- `.env.production` — secrets & configuration
+
+### Bootstrap
+
+```bash
+curl -fsSL https://get.docker.com | sh
+git clone <repo-url> /var/www/yallachat
+# add .env.production, Caddyfile, docker-compose.yml
+docker compose up -d
 ```
 
 ## Project Structure
