@@ -1,21 +1,30 @@
 services:
+    caddy:
+        image: caddy:2-alpine
+        restart: unless-stopped
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile:ro
+            - caddy_data:/data
+            - caddy_config:/config
+        depends_on:
+            - app
+            - reverb
+        networks:
+            - yalla-chat
+
     app:
-        build:
-            context: .
-            args:
-                VITE_APP_NAME: ${APP_NAME:-Yalla-Chat}
-                VITE_REVERB_APP_KEY: ${REVERB_APP_KEY:-}
-                VITE_REVERB_HOST: ${VITE_REVERB_HOST:-127.0.0.1}
-                VITE_REVERB_PORT: ${VITE_REVERB_PORT:-8080}
-                VITE_REVERB_SCHEME: ${VITE_REVERB_SCHEME:-http}
+        image: salehaldhaheri1010/yallachat:production
         restart: unless-stopped
         command: php artisan octane:frankenphp --host=0.0.0.0 --port=8000
         environment:
             RUN_OPTIMIZE: "true"
         env_file:
             - .env.production
-        ports:
-            - "80:8000"
+        expose:
+            - "8000"
         volumes:
             - app_storage:/app/storage
         healthcheck:
@@ -33,15 +42,15 @@ services:
             - yalla-chat
 
     reverb:
-        build: .
+        image: salehaldhaheri1010/yallachat:production
         restart: unless-stopped
         command: php artisan reverb:start
         env_file:
             - .env.production
         environment:
             REVERB_SERVER_HOST: "0.0.0.0"
-        ports:
-            - "8080:8080"
+        expose:
+            - "8080"
         healthcheck:
             test: ["CMD", "php", "-r", "exit(@fsockopen('127.0.0.1', 8080) ? 0 : 1);"]
             interval: 10s
@@ -57,11 +66,17 @@ services:
             - yalla-chat
 
     horizon:
-        build: .
+        image: salehaldhaheri1010/yallachat:production
         restart: unless-stopped
         command: php artisan horizon
         env_file:
             - .env.production
+        healthcheck:
+            test: ["CMD", "php", "artisan", "horizon:status"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
         depends_on:
             migrate:
                 condition: service_completed_successfully
@@ -71,11 +86,17 @@ services:
             - yalla-chat
 
     scheduler:
-        build: .
+        image: salehaldhaheri1010/yallachat:production
         restart: unless-stopped
         command: php artisan schedule:work
         env_file:
             - .env.production
+        healthcheck:
+            test: ["CMD", "php", "-r", "exit(0)"]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
         depends_on:
             migrate:
                 condition: service_completed_successfully
@@ -85,7 +106,7 @@ services:
             - yalla-chat
 
     migrate:
-        build: .
+        image: salehaldhaheri1010/yallachat:production
         command: php artisan migrate --force
         env_file:
             - .env.production
@@ -101,7 +122,7 @@ services:
         image: mysql:8.4
         restart: unless-stopped
         environment:
-            MYSQL_DATABASE: ${DB_DATABASE:-yalla_chat}
+            MYSQL_DATABASE: yalla_chat
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-password}
         volumes:
             - mysql_data:/var/lib/mysql
@@ -132,6 +153,8 @@ volumes:
     mysql_data:
     redis_data:
     app_storage:
+    caddy_data:
+    caddy_config:
 
 networks:
     yalla-chat:

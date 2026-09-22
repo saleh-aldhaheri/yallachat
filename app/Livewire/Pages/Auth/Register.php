@@ -11,7 +11,7 @@ use Masmerise\Toaster\Toaster;
 
 class Register extends Component
 {
-    #[Validate('required|min:2|alpha')]
+    #[Validate('required|min:2|regex:/^[\pL\s\-]+$/u')]
     public string $name;
 
     #[Validate('required|unique:users,email|email')]
