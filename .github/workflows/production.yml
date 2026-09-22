@@ -1,0 +1,58 @@
+name: Production
+on:
+  workflow_dispatch:
+
+jobs:
+  push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce main branch
+        run: |
+          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "❌ This workflow can only run on main branch!"
+            exit 1
+          fi
+      - name: checkout branch
+        uses: actions/checkout@v4
+
+      - name: get short SHA
+        id: sha
+        run: echo "short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: login to docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.PROD_DOCKER_USERNAME }}
+          password: ${{ secrets.PROD_DOCKER_TOKEN }}
+
+      - name: build and push image
+        run: |
+          docker build \
+            --build-arg VITE_APP_NAME="Yalla-Chat" \
+            --build-arg VITE_REVERB_APP_KEY="foaywlt6lr3eflmwo454" \
+            --build-arg VITE_REVERB_HOST="yallachat.zenith-blog.blog" \
+            --build-arg VITE_REVERB_PORT="443" \
+            --build-arg VITE_REVERB_SCHEME="https" \
+            -t ${{ secrets.PROD_DOCKER_USERNAME }}/yallachat:production \
+            -t ${{ secrets.PROD_DOCKER_USERNAME }}/yallachat:${{ steps.sha.outputs.short }} \
+            .
+          docker push ${{ secrets.PROD_DOCKER_USERNAME }}/yallachat:production
+          docker push ${{ secrets.PROD_DOCKER_USERNAME }}/yallachat:${{ steps.sha.outputs.short }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: push-image
+    steps:
+      - name: deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_EC2_HOST }}
+          username: ${{ secrets.PROD_EC2_USERNAME }}
+          key: ${{ secrets.PROD_EC2_SSH_KEY }}
+          script: |
+            cd /var/www/yallachat
+            sudo docker compose pull
+            sudo docker compose down
+            sudo docker compose up -d
+            sleep 30
+            sudo docker compose ps

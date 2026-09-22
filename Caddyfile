@@ -1,12 +1,11 @@
-{
-    email {$CADDY_EMAIL}
-}
-
-{$CADDY_DOMAIN} {
+yallachat.zenith-blog.blog {
     encode zstd gzip
-    reverse_proxy app:8000
-}
 
-{$CADDY_REVERB_DOMAIN} {
-    reverse_proxy reverb:8080
+    handle /app/* {
+        reverse_proxy reverb:8080
+    }
+
+    handle {
+        reverse_proxy app:8000
+    }
 }
